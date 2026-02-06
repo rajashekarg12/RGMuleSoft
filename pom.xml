@@ -28,6 +28,9 @@
 				<groupId>org.mule.tools.maven</groupId>
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
+				<configuration>
+        <runtimeVersion>${app.runtime}</runtimeVersion>
+    </configuration>
 				<extensions>true</extensions>
 			</plugin>
 		</plugins>
