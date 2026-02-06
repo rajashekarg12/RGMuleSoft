@@ -1,0 +1,10 @@
+# Mule / Maven
+target/
+
+# Eclipse / Anypoint Studio
+.project
+.classpath
+.settings/
+
+# Local scripts
+git-push.bat
