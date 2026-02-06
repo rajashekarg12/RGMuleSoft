@@ -51,6 +51,7 @@
 			<url>https://repository.mulesoft.org/releases/</url>
 			<layout>default</layout>
 		</repository>
+			<repositories>
 		<id>mule-enterprise</id>
     <name>MuleSoft Enterprise Releases</name>
     <url>https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/</url>
