@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="78a14087-6c63-46fc-86ed-eb28de34779f" >
-		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:tracing="http://www.mulesoft.org/schema/mule/tracing"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/tracing http://www.mulesoft.org/schema/mule/tracing/current/mule-tracing.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="b9324a92-7a64-4745-9088-64c5aa447e5a" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
-	<global-property doc:name="Global Property" doc:id="750aed68-e331-4813-a583-e40d4b97242c" name="mule.env" value="sandbox" />
-	<configuration-properties doc:name="Configuration properties" doc:id="a2edd2a4-3fc9-45da-a711-fb12859ef58f" file="config/${mule.env}.yaml" />
-	<flow name="mymuleprojectFlow" doc:id="9ae64406-09ac-4121-bee8-dcf66978cc66" >
-		<http:listener doc:name="Listener" doc:id="dcb9e2a7-2992-4d3e-85a9-186608846983" config-ref="HTTP_Listener_config" path="/helloMuleRG"/>
-		<set-payload value="${app.message}" doc:name="Set Payload" doc:id="455dd8da-0832-4e30-997e-c4cdec84d244" />
-	</flow>
+	<configuration-properties doc:name="Configuration properties" doc:id="8459fef9-9096-4fc0-be5d-b35ad8531f28" file="config/${mule.env}.yaml" />
+<secure-properties:config name="Secure_Properties_Config" 
+    doc:name="Secure Properties Config" 
+    file="config/${mule.env}.yaml" 
+    key="${secure.key}">
+    <secure-properties:encrypt algorithm="Blowfish" mode="CBC"/>
+</secure-properties:config>
+	<flow name="muledbprojectFlow" doc:id="1abaf01a-547f-4072-a5f1-3249006f30b8" >
+		<http:listener doc:name="Listener" doc:id="14c43ab5-ae36-4024-aad6-e180f2676aa4" config-ref="HTTP_Listener_config" path="/a">
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="1bf67dc9-6b65-4478-8192-aa121f27eedc" message="&quot;Password is correct: &quot; ++ (p('db.password') == 'welcome1')"/>
+		<set-payload value="#[&quot;Validation Result: &quot; ++ (Mule::p('secure::db.password') == 'welcome1')]" doc:name="Set Payload" doc:id="e9136d56-2ca8-4193-ad66-4846bc69dbee" mimeType="text/plain"/>
+	
+	
+</flow>
 </mule>
